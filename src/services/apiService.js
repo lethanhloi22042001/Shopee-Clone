@@ -1,10 +1,10 @@
-import axios from "../axios";
+import data from "../axios";
 
 
-const getBlogList = ()=>( axios.get("blog/list"));
+const getBlogList = ()=>(data.get("blog/list"));
 
 const getBlogList2 = ()=>{
-  return axios.get("blog/list");
+  return data.get("blog/list");
 }
 export {
   getBlogList,

@@ -1,21 +1,6 @@
-import React, { useEffect } from "react";
-import Shipping from '../images/home/shipping.jpg'
-import { getBlogList } from "../../services/apiService";
+import React from "react";
 
 function MenuLeft() {
-  const getAllCode = async () => {
-    try {
-        console.log('dât');
-        let data = await getBlogList();
-        console.log('data ne`', data);
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-useEffect(() => {
-    getAllCode();
-}, []);
   return (
     <>
       <div className="col-sm-3">
@@ -269,7 +254,7 @@ useEffect(() => {
           </div>
 
           <div className="shipping text-center">
-            <img src={Shipping} alt="" />
+            {/* <img src={Shipping} alt="" /> */}
           </div>
         </div>
       </div>
