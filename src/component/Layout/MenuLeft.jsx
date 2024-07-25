@@ -103,7 +103,7 @@ function MenuLeft() {
                   <a
                     data-toggle="collapse"
                     data-parent="#accordian"
-                    href="#womens"
+                    href="#/"
                   >
                     <span className="badge pull-right">
                       <i className="fa fa-plus"></i>

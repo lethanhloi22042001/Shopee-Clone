@@ -2443,17 +2443,21 @@ textarea {
 .contact-info .social-networks ul li a:hover {
     color: #FE980F;
 }
+
 /* rate start */
 .star-ratings {
     float: right;
 }
+
 .star-container {
-    padding: 0 2px!important;
+    padding: 0 2px !important;
 }
+
 .widget-svg {
     width: 20px !important;
     height: 20px !important;
 }
+
 .through {
     text-decoration: line-through;
 }

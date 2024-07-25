@@ -1,11 +1,14 @@
-import axios from "axios";
-const api = axios.create({
-  baseURL: "http://localhost/laravel8/public",
-  // withCredentials: true
+ import axios from 'axios';
+const instance = axios.create({
+    baseURL: "http://localhost/laravel8/",
+    // withCredentials: true
 });
-api.interceptors.response.use((response) => {
-  const { data } = response;
-  return data;
-});
+instance.interceptors.response.use(
+    (response) => {
+        const { data } = response;
+        return  data
+    },
+    
+);
 
-export default api;
+export default instance;

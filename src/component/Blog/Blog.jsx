@@ -1,130 +1,75 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Blog1 } from "../../images";
 import { Link } from "react-router-dom";
+import axios from "../../axios";
 
 function Blog() {
+  const [data, setData] = useState([]);
+  const [image, setImage] = useState(null);
+  useEffect(() => {
+    axios
+      .get("http://localhost/laravel8/public/api/blog")
+      .then((result) => {
+        setData(result?.blog?.data);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
   return (
     <>
-      <div class="container">
-        <div class="row">
-          <div class="col-sm-9">
-            <div class="blog-post-area">
-              <h2 class="title text-center">Latest From our Blog</h2>
-              <div class="single-blog-post">
-                <h3>Girls Pink T Shirt arrived in store</h3>
-                <div class="post-meta">
-                  <ul>
-                    <li>
-                      <i class="fa fa-user"></i> Mac Doe
-                    </li>
-                    <li>
-                      <i class="fa fa-clock-o"></i> 1:33 pm
-                    </li>
-                    <li>
-                      <i class="fa fa-calendar"></i> DEC 5, 2013
-                    </li>
-                  </ul>
-                  <span>
-                    <i class="fa fa-star"></i>
-                    <i class="fa fa-star"></i>
-                    <i class="fa fa-star"></i>
-                    <i class="fa fa-star"></i>
-                    <i class="fa fa-star-half-o"></i>
-                  </span>
-                </div>
-                <a href="">
-                  <img src={Blog1} alt="" />
-                </a>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                  laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-                  irure dolor in reprehenderit in voluptate velit esse cillum
-                  dolore eu fugiat nulla pariatur.
-                </p>
-                <Link to="/blog/detail" class="btn btn-primary" href="">
-                  Read More
-                </Link>
-              </div>
-              <div class="single-blog-post">
-                <h3>Girls Pink T Shirt arrived in store</h3>
-                <div class="post-meta">
-                  <ul>
-                    <li>
-                      <i class="fa fa-user"></i> Mac Doe
-                    </li>
-                    <li>
-                      <i class="fa fa-clock-o"></i> 1:33 pm
-                    </li>
-                    <li>
-                      <i class="fa fa-calendar"></i> DEC 5, 2013
-                    </li>
-                  </ul>
-                  <span>
-                    <i class="fa fa-star"></i>
-                    <i class="fa fa-star"></i>
-                    <i class="fa fa-star"></i>
-                    <i class="fa fa-star"></i>
-                    <i class="fa fa-star-half-o"></i>
-                  </span>
-                </div>
-                <a href="">
-                  <img src="images/blog/blog-two.jpg" alt="" />
-                </a>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                  laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-                  irure dolor in reprehenderit in voluptate velit esse cillum
-                  dolore eu fugiat nulla pariatur.
-                </p>
-                <Link to="/blog/detail" class="btn btn-primary" href="">
-                  Read More
-                </Link>
-              </div>
-              <div class="single-blog-post">
-                <h3>Girls Pink T Shirt arrived in store</h3>
-                <div class="post-meta">
-                  <ul>
-                    <li>
-                      <i class="fa fa-user"></i> Mac Doe
-                    </li>
-                    <li>
-                      <i class="fa fa-clock-o"></i> 1:33 pm
-                    </li>
-                    <li>
-                      <i class="fa fa-calendar"></i> DEC 5, 2013
-                    </li>
-                  </ul>
-                  <span>
-                    <i class="fa fa-star"></i>
-                    <i class="fa fa-star"></i>
-                    <i class="fa fa-star"></i>
-                    <i class="fa fa-star"></i>
-                    <i class="fa fa-star-half-o"></i>
-                  </span>
-                </div>
-                <a href="">
-                  <img src="images/blog/blog-three.jpg" alt="" />
-                </a>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                  laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-                  irure dolor in reprehenderit in voluptate velit esse cillum
-                  dolore eu fugiat nulla pariatur.
-                </p>
-                <Link to="/blog/detail" class="btn btn-primary" href="">
-                  Read More
-                </Link>
-              </div>
-              <div class="pagination-area">
-                <ul class="pagination">
+      <div className="container">
+        <div className="row">
+          <div className="col-sm-9">
+            <div className="blog-post-area">
+              {data ? (
+                data.map((pro) => {
+                  return (
+                    <>
+                      <h2 className="title text-center">{pro.title}</h2>
+                      <div className="single-blog-post">
+                        <h3>{pro.description}</h3>
+                        <div className="post-meta">
+                          <ul>
+                            <li>
+                              <i className="fa fa-user"></i> Mac Doe
+                            </li>
+                            <li>
+                              <i className="fa fa-clock-o"></i> 1:33 pm
+                            </li>
+                            <li>
+                              <i className="fa fa-calendar"></i> DEC 5, 2013
+                            </li>
+                          </ul>
+                          <span>
+                            <i className="fa fa-star"></i>
+                            <i className="fa fa-star"></i>
+                            <i className="fa fa-star"></i>
+                            <i className="fa fa-star"></i>
+                            <i className="fa fa-star-half-o"></i>
+                          </span>
+                        </div>
+                        <a href="">
+                          <img src={pro?.image} alt="Không có hình ảnh" />
+                        </a>
+                        <p dangerouslySetInnerHTML={{ __html: pro.content }} />
+                        <Link
+                          to={`/blog/detail/${pro.id}`}
+                          className="btn btn-primary"
+                          href=""
+                        >
+                          Read More
+                        </Link>
+                      </div>
+                    </>
+                  );
+                })
+              ) : (
+                <></>
+              )}
+              <div className="pagination-area">
+                <ul className="pagination">
                   <li>
-                    <a href="" class="active">
+                    <a href="" className="active">
                       1
                     </a>
                   </li>
@@ -136,7 +81,7 @@ function Blog() {
                   </li>
                   <li>
                     <a href="">
-                      <i class="fa fa-angle-double-right"></i>
+                      <i className="fa fa-angle-double-right"></i>
                     </a>
                   </li>
                 </ul>
