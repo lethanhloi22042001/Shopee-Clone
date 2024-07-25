@@ -1,5 +1,6 @@
 import React from "react";
 import { Logo } from "../../images";
+import { Link } from "react-router-dom";
 
 const Head = () => {
   return (
@@ -131,9 +132,9 @@ const Head = () => {
                     </a>
                   </li>
                   <li>
-                    <a href="login.html">
+                    <Link to={"/login"}>
                       <i className="fa fa-lock"></i> Login
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </div>
@@ -162,9 +163,9 @@ const Head = () => {
               <div className="mainmenu pull-left">
                 <ul className="nav navbar-nav collapse navbar-collapse">
                   <li>
-                    <a href="index.html" className="active">
+                    <Link className="active" to={"/home"}>
                       Home
-                    </a>
+                    </Link>
                   </li>
                   <li className="dropdown">
                     <a href="/#">
@@ -184,25 +185,28 @@ const Head = () => {
                         <a href="cart.html">Cart</a>
                       </li>
                       <li>
-                        <a href="login.html">Login</a>
+                        <Link to={"/login"}>Login</Link>
                       </li>
                     </ul>
                   </li>
                   <li className="dropdown">
-                    <a href="/#">
+                    {/* <a href="/#">
                       Blog<i className="fa fa-angle-down"></i>
-                    </a>
+                    </a> */}
+                    <Link to={"/blog"}>
+                      Blog<i className="fa fa-angle-down"></i>
+                    </Link>
                     <ul role="menu" className="sub-menu">
                       <li>
-                        <a href="blog.html">Blog List</a>
+                        <Link to={"/blog"}>Blog List</Link>
                       </li>
                       <li>
-                        <a href="blog-single.html">Blog Single</a>
+                        <Link to={"/blogSingle"}>Blog Single</Link>
                       </li>
                     </ul>
                   </li>
                   <li>
-                    <a href="404.html">404</a>
+                    <Link to={"/404"}>404</Link>
                   </li>
                   <li>
                     <a href="contact-us.html">Contact</a>

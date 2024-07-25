@@ -2,6 +2,7 @@
 import axios from "../axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { api } from "../services/api";
 
 function Detail() {
   const { id } = useParams();
@@ -10,8 +11,8 @@ function Detail() {
   const [idRely, setIdRely] = useState("");
 
   useEffect(() => {
-    axios
-      .get(`http://localhost/laravel8/public/api/blog/detail/${id}`)
+    api
+      .get(`/blog/detail/${id}`)
       .then((res) => {
         console.log(res.data);
         setData(res.data);
@@ -46,10 +47,12 @@ function Detail() {
               </span>
             </div>
             <a href="">
-              <img src="images/blog/blog-one.jpg" alt="" />
+              <img
+                src={`http://localhost/laravel8/public/upload/Blog/image/${data.image}`}
+                alt="Không có hình ảnh"
+              />
             </a>
-            {/*  */}
-            <div dangerouslySetInnerHTML={{ __html: data.content }}/>
+            <div dangerouslySetInnerHTML={{ __html: data.content }} />
             <div className="pager-area">
               <ul className="pager pull-right">
                 <li>

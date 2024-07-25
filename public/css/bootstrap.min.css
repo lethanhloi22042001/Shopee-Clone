@@ -1360,7 +1360,7 @@ pre code {
   }
 
   .col-sm-offset-1 {
-    margin-left: 8.333333333333332%
+    /* margin-left: 8.333333333333332% */
   }
 
   .col-sm-offset-0 {

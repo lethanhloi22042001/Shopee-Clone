@@ -5,6 +5,7 @@
 @import url(http://fonts.googleapis.com/css?family=Roboto:400,300,400italic,500,700,100);
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,800,300,600,700);
 @import url(http://fonts.googleapis.com/css?family=Abel);
+
 body {
     font-family: 'Roboto', sans-serif;
     position: relative;
@@ -326,6 +327,7 @@ ul.sub-menu {
         -webkit-transform: translateY(20px);
         transform: translateY(20px);
     }
+
     100% {
         opacity: 1;
         -webkit-transform: translateY(0);
@@ -1451,9 +1453,19 @@ h2.title {
     padding-left: 10px;
     width: 100%;
 }
+
+.login-form form input {
+    border-radius: 12px;
+}
+
+.signup-form form input {
+    border-radius: 12px;
+}
+
 .signup-form form textarea {
     height: 150px;
 }
+
 .login-form form span {
     line-height: 25px;
 }
@@ -1946,6 +1958,10 @@ textarea {
 /*************************
 *******Blog CSS******
 **************************/
+
+.single-blog-post {
+    margin-bottom: 30px;
+}
 
 .blog-post-area .single-blog-post h3 {
     color: #696763;
