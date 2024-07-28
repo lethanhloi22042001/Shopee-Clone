@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-function BlogContaint({ props }) {
+function BlogContaint({ props, index }) {
   const pro = { ...props };
   return (
     <>
@@ -34,8 +34,8 @@ function BlogContaint({ props }) {
             alt="Không có hình ảnh"
           />
         </a>
-        <p dangerouslySetInnerHTML={{ __html: pro.content }} />
-        <Link to={`/blog/detail/${pro.id}`} className="btn btn-primary" href="">
+        {/* <p dangerouslySetInnerHTML={{ __html: pro.content }} /> */}
+        <Link to={`/blog/detail/${pro.id}`} className="btn btn-primary">
           Read More
         </Link>
       </div>

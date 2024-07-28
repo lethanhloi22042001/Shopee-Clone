@@ -1,7 +1,12 @@
 import axios from "../axios";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { api } from "../services/api";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import LoginComponent from "./LoginComponent";
 function Login() {
+  const navigate = useNavigate();
+
   const [getData, setGetData] = useState({
     name: "",
     email: "",
@@ -13,21 +18,17 @@ function Login() {
   });
   const [avatar, setAvatar] = useState("");
   const [file, setFile] = useState("");
-
   const [selectedImage, setSelectedImage] = useState(null);
 
   const getValueInput = (e) => {
     const { value, name } = e.target;
-
-    setGetData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-    // setGetData({ ...getData, [e.target.name]: e.target.value });
+    setGetData((pre) => ({ ...pre, [name]: value }));
   };
+
+  var fileInputRef = useRef(null);
+
   function handleUserInputFile(e) {
     const file = e.target.files;
-    console.log("this is file is picked", file);
     // Send file to API server
     let reader = new FileReader();
     reader.onload = (e) => {
@@ -37,8 +38,8 @@ function Login() {
         ...prevState,
         avatar: result,
       }));
-      setFile(file[0]); // data of the picture
-      console.log(file);
+      setFile(file[0]); // data of the picture {size , type... of Picture}
+      console.log("file", file);
     };
     reader.readAsDataURL(file[0]);
   }
@@ -61,55 +62,32 @@ function Login() {
       console.log(type);
       if (size >= 1048576) {
         console.log("Vui lòng load ảnh dưới 1MB");
-        setAvatar("");
-        setFile("");
       }
       if (!type.includes("image")) {
         console.log("vui lòng chọn loại là hình ảnh");
       }
       api
         .post("/register", getData)
-        .then((result) => {
-          console.log(result);
+        .then((res) => {
+          toast.success("Register successfully!");
         })
         .catch((err) => {
+          toast.error("Error");
           console.log(err);
         });
+
+      setFile(null);
+      setSelectedImage(null);
     }
   };
 
-  useEffect(() => {}, [getData, avatar, file]);
+  useEffect(() => {}, [getData, avatar, file, selectedImage, fileInputRef]);
   return (
     <>
-      <button
-        onClick={() => {
-          setGetData((prev) => ({
-            ...prev,
-            name: "",
-          }));
-        }}
-      >
-        Reset Name
-      </button>
       <section id="form">
         <div className="container">
           <div className="row">
-            <div className="col-sm-4 col-sm-offset-1">
-              <div className="login-form">
-                <h2>Login to your account</h2>
-                <form action="#">
-                  <input type="text" placeholder="Name" />
-                  <input type="email" placeholder="Email Address" />
-                  <span>
-                    <input type="checkbox" className="checkbox" />
-                    Keep me signed in
-                  </span>
-                  <button type="submit" className="btn btn-default">
-                    Login
-                  </button>
-                </form>
-              </div>
-            </div>
+            <LoginComponent />
             <div className="col-sm-1">
               <h2 className="or">OR</h2>
             </div>
@@ -154,38 +132,54 @@ function Login() {
                     name="phone"
                   />
                   {/* IMAGE */}
-                  <div>
-                    {selectedImage && (
-                      <div>
-                        {/* Display the selected image */}
-                        <img
-                          alt="not found"
-                          width={"250px"}
-                          src={URL.createObjectURL(selectedImage)}
-                        />
-                        <br /> <br />
-                        {/* Button to remove the selected image */}
-                        <button onClick={() => setSelectedImage(null)}>
-                          Remove
-                        </button>
-                      </div>
-                    )}
-                    <br />
-                    {/* Input element to select an image file */}
+                  <div style={{}}>
                     <input
+                      className="customFileInput"
                       type="file"
                       name="avatar"
                       onChange={(event) => {
                         handleUserInputFile(event);
+                        setSelectedImage(event.target.files[0]);
                       }}
+                      id="uploadBtn"
+                      ref={fileInputRef}
                     />
+                    <label id="labelUploadBtn" htmlFor="uploadBtn">
+                      Choose Image {"<"} 1MB{" "}
+                    </label>
                   </div>
-
+                  <div
+                    className="showAvatar"
+                    // minWidth={"360px"}
+                    // minHeight={"200px"}
+                  >
+                    {selectedImage && (
+                      <div>
+                        <img
+                          id="imgShowavatar"
+                          alt="not found"
+                          width={"250px"}
+                          src={URL.createObjectURL(selectedImage)}
+                        />
+                        <button
+                          onClick={() => {
+                            setSelectedImage(null);
+                            if (fileInputRef.current.value) {
+                              fileInputRef.current.value = "";
+                            }
+                          }}
+                          id="btnRemove"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    )}
+                  </div>
                   <input
                     type="text"
                     placeholder="Level"
                     onChange={getValueInput}
-                    value={getData.phone}
+                    value={getData.level}
                     name="level"
                   />
                   <button

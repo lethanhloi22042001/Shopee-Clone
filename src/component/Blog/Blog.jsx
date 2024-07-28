@@ -23,9 +23,9 @@ function Blog() {
           <div className="col-sm-9">
             <div className="blog-post-area">
               {data ? (
-                data.map((pro) => {
+                data.map((pro, index) => {
                   // Tạo component
-                  return <BlogContaint props={pro} />;
+                  return <BlogContaint props={pro} index={index} />;
                 })
               ) : (
                 <></>
