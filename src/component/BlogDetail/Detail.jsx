@@ -4,17 +4,21 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { api } from "../../services/api";
 import DetailComment from "./DetailComment";
+import { getBlogImg } from "../../helper";
 function Detail() {
   const { id } = useParams();
   const [data, setData] = useState("");
-  const [comment, setComment] = useState("");
-  const [idRely, setIdRely] = useState("");
-
+  const [comments, setComments] = useState("");
+  const getDataTest = (data) => {
+    console.log("dataFromChild", data);
+  };
   useEffect(() => {
     api
       .get(`/blog/detail/${id}`)
       .then((res) => {
+        console.log("res", res);
         setData(res.data);
+        setComments(res.data.comment);
       })
       .catch((err) => {});
   }, [id]);
@@ -46,10 +50,7 @@ function Detail() {
               </span>
             </div>
             <a href="">
-              <img
-                src={`http://localhost/laravel8/public/upload/Blog/image/${data.image}`}
-                alt="Không có hình ảnh"
-              />
+              <img src={getBlogImg(data.image)} alt="Không có hình ảnh" />
             </a>
             <div dangerouslySetInnerHTML={{ __html: data.content }} />
             <div className="pager-area">
@@ -65,7 +66,12 @@ function Detail() {
           </div>
         </div>
 
-        <DetailComment idBlog={id}  ></DetailComment>
+        <DetailComment
+          idBlog={id}
+          dataCommentParent={comments}
+          setComments={setComments}
+          getDataTestFNC={getDataTest}
+        ></DetailComment>
       </div>
     </>
   );

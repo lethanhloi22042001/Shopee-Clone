@@ -9,6 +9,7 @@ import Detail from "./component/BlogDetail/Detail";
 import Err from "./component/404/Err";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import Account from "./component/account/Account";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -19,6 +20,7 @@ root.render(
           <Route path="/" element={<Home />} />
           <Route path="/404" element={<Err />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/account" element={<Account />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/detail/:id" element={<Detail />} />
         </Routes>

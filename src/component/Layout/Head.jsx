@@ -112,9 +112,9 @@ const Head = () => {
               <div className="shop-menu clearfix pull-right">
                 <ul className="nav navbar-nav">
                   <li>
-                    <a href="/">
+                    <Link to={"/account"}>
                       <i className="fa fa-user"></i> Account
-                    </a>
+                    </Link>
                   </li>
                   <li>
                     <a href="/">

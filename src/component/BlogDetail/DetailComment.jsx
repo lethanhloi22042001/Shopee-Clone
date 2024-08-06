@@ -1,11 +1,26 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { api } from "../../services/api";
-function DetailComment({ idBlog }) {
-  let dataLocalStorage = localStorage.getItem("login");
-  let convertDataLocal = JSON.parse(dataLocalStorage);
+import { Rating } from "react-simple-star-rating";
+import { userImageUrl } from "../../constants/image";
+import { getUserImg } from "../../helper";
+function DetailComment({
+  idBlog,
+  dataCommentParent,
+  setComments,
+  getDataTestFNC,
+}) {
+  const { id } = useParams();
+  const containerRef = useRef(null);
+  const dataLocalStorage = localStorage.getItem("login");
+  const convertDataLocal = JSON.parse(dataLocalStorage);
+  const [isSubmitedData, setISubmitedData] = useState(null);
+  const [valueComment, setValueComment] = useState("");
+  const [rating, setRating] = useState(0);
+  const [idReply, setIdReply] = useState(Number);
   let navigate = useNavigate();
+
   let config = {
     headers: {
       Authorization: "Bearer " + convertDataLocal?.token,
@@ -14,14 +29,19 @@ function DetailComment({ idBlog }) {
     },
   };
 
-  const [valueComment, setValueComment] = useState("");
-
+  const handleRating = (rate) => {
+    setRating(rate);
+    getDataTestFNC(rate);
+  };
+  const handleReply = (idParent) => {
+    containerRef.current.focus();
+    setIdReply(idParent);
+  };
   const handleOnchangeCommnet = (value) => {
     setValueComment(value);
   };
   const handleSubmitComment = (dataLocalStorage) => {
     let convertDataLocal = JSON.parse(dataLocalStorage);
-    console.log(convertDataLocal);
     if (!convertDataLocal?.token) {
       toast("Vui lòng đăng nhập");
       navigate("/login");
@@ -35,21 +55,27 @@ function DetailComment({ idBlog }) {
         id_blog: idBlog,
         id_user: convertDataLocal?.Auth.id,
         name_user: convertDataLocal?.Auth.name,
-        id_comment: convertDataLocal?.Auth.level,
+        id_comment: idReply ? idReply : 0,
         comment: valueComment,
-        image_user: `http://localhost/laravel/../public/upload/Blog/image/${convertDataLocal?.Auth.avatar}`,
+        image_user: convertDataLocal?.Auth.avatar,
+        // image_user: `http://localhost/laravel/../public/upload/Blog/image/${convertDataLocal?.Auth.avatar}`,
       };
-      console.log("dataSubmit", dataSubmit, config);
       api
-        .post(`/blog/comment/${idBlog}`, dataSubmit)
+        .post(`/blog/comment/${idBlog}`, dataSubmit, config)
         .then((result) => {
-          console.log(result);
+          toast("Đã Comment Thành Công");
+          setValueComment("");
+          api
+            .get(`/blog/detail/${id}`)
+            .then((res) => {
+              setComments(res.data.comment);
+              console.log(res);
+            })
+            .catch((err) => {});
         })
         .catch((err) => {});
     }
   };
-
-  useEffect(() => {}, []);
   return (
     <>
       <div className="rating-area">
@@ -91,7 +117,7 @@ function DetailComment({ idBlog }) {
       </div>
 
       <div className="media commnets">
-        <a className="pull-left" href="#">
+        <a className="pull-left" href="#/">
           <img className="media-object" src="images/blog/man-one.jpg" alt="" />
         </a>
         <div className="media-body">
@@ -132,256 +158,101 @@ function DetailComment({ idBlog }) {
         </div>
       </div>
       <div className="response-area">
-        <h2>3 RESPONSES</h2>
+        <h2>{dataCommentParent.length} RESPONSES</h2>
         <ul className="media-list">
-          <li className="media">
-            <a className="pull-left" href="#">
-              <img
-                className="media-object"
-                src="images/blog/man-two.jpg"
-                alt=""
-              />
-            </a>
-            <div className="media-body">
-              <ul className="sinlge-post-meta">
-                <li>
-                  <i className="fa fa-user"></i>Janis Gallagher
-                </li>
-                <li>
-                  <i className="fa fa-clock-o"></i> 1:33 pm
-                </li>
-                <li>
-                  <i className="fa fa-calendar"></i> DEC 5, 2013
-                </li>
-              </ul>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat.
-              </p>
-              <a className="btn btn-primary" href="">
-                <i className="fa fa-reply"></i>Replay
-              </a>
-            </div>
-          </li>
-          <li className="media second-media">
-            <a className="pull-left" href="#">
-              <img
-                className="media-object"
-                src="images/blog/man-three.jpg"
-                alt=""
-              />
-            </a>
-            <div className="media-body">
-              <ul className="sinlge-post-meta">
-                <li>
-                  <i className="fa fa-user"></i>Janis Gallagher
-                </li>
-                <li>
-                  <i className="fa fa-clock-o"></i> 1:33 pm
-                </li>
-                <li>
-                  <i className="fa fa-calendar"></i> DEC 5, 2013
-                </li>
-              </ul>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat.
-              </p>
-              <a className="btn btn-primary" href="">
-                <i className="fa fa-reply"></i>Replay
-              </a>
-            </div>
-          </li>
-          <li className="media second-media">
-            <a className="pull-left" href="#">
-              <img
-                className="media-object"
-                src="images/blog/man-three.jpg"
-                alt=""
-              />
-            </a>
-            <div className="media-body">
-              <ul className="sinlge-post-meta">
-                <li>
-                  <i className="fa fa-user"></i>Janis Gallagher
-                </li>
-                <li>
-                  <i className="fa fa-clock-o"></i> 1:33 pm
-                </li>
-                <li>
-                  <i className="fa fa-calendar"></i> DEC 5, 2013
-                </li>
-              </ul>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat.
-              </p>
-              <a className="btn btn-primary" href="">
-                <i className="fa fa-reply"></i>Replay
-              </a>
-            </div>
-          </li>
-          <li className="media second-media">
-            <a className="pull-left" href="#">
-              <img
-                className="media-object"
-                src="images/blog/man-three.jpg"
-                alt=""
-              />
-            </a>
-            <div className="media-body">
-              <ul className="sinlge-post-meta">
-                <li>
-                  <i className="fa fa-user"></i>Janis Gallagher
-                </li>
-                <li>
-                  <i className="fa fa-clock-o"></i> 1:33 pm
-                </li>
-                <li>
-                  <i className="fa fa-calendar"></i> DEC 5, 2013
-                </li>
-              </ul>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat.
-              </p>
-              <a className="btn btn-primary" href="">
-                <i className="fa fa-reply"></i>Replay
-              </a>
-            </div>
-          </li>
-          <li className="media">
-            <a className="pull-left" href="#">
-              <img
-                className="media-object"
-                src="images/blog/man-four.jpg"
-                alt=""
-              />
-            </a>
-            <div className="media-body">
-              <ul className="sinlge-post-meta">
-                <li>
-                  <i className="fa fa-user"></i>Janis Gallagher
-                </li>
-                <li>
-                  <i className="fa fa-clock-o"></i> 1:33 pm
-                </li>
-                <li>
-                  <i className="fa fa-calendar"></i> DEC 5, 2013
-                </li>
-              </ul>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat.
-              </p>
-              <a className="btn btn-primary" href="">
-                <i className="fa fa-reply"></i>Replay
-              </a>
-            </div>
-          </li>
-          <li className="media second-media">
-            <a className="pull-left" href="#">
-              <img
-                className="media-object"
-                src="images/blog/man-three.jpg"
-                alt=""
-              />
-            </a>
-            <div className="media-body">
-              <ul className="sinlge-post-meta">
-                <li>
-                  <i className="fa fa-user"></i>Janis Gallagher
-                </li>
-                <li>
-                  <i className="fa fa-clock-o"></i> 1:33 pm
-                </li>
-                <li>
-                  <i className="fa fa-calendar"></i> DEC 5, 2013
-                </li>
-              </ul>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat.
-              </p>
-              <a className="btn btn-primary" href="">
-                <i className="fa fa-reply"></i>Replay
-              </a>
-            </div>
-          </li>
-          <li className="media second-media">
-            <a className="pull-left" href="#">
-              <img
-                className="media-object"
-                src="images/blog/man-three.jpg"
-                alt=""
-              />
-            </a>
-            <div className="media-body">
-              <ul className="sinlge-post-meta">
-                <li>
-                  <i className="fa fa-user"></i>Janis Gallagher
-                </li>
-                <li>
-                  <i className="fa fa-clock-o"></i> 1:33 pm
-                </li>
-                <li>
-                  <i className="fa fa-calendar"></i> DEC 5, 2013
-                </li>
-              </ul>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat.
-              </p>
-              <a className="btn btn-primary" href="">
-                <i className="fa fa-reply"></i>Replay
-              </a>
-            </div>
-          </li>
-          <li className="media second-media">
-            <a className="pull-left" href="#">
-              <img
-                className="media-object"
-                src="images/blog/man-three.jpg"
-                alt=""
-              />
-            </a>
-            <div className="media-body">
-              <ul className="sinlge-post-meta">
-                <li>
-                  <i className="fa fa-user"></i>Janis Gallagher
-                </li>
-                <li>
-                  <i className="fa fa-clock-o"></i> 1:33 pm
-                </li>
-                <li>
-                  <i className="fa fa-calendar"></i> DEC 5, 2013
-                </li>
-              </ul>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat.
-              </p>
-              <a className="btn btn-primary" href="">
-                <i className="fa fa-reply"></i>Replay
-              </a>
-            </div>
-          </li>
+          {dataCommentParent ? (
+            dataCommentParent?.map((itemParent, index) => {
+              return (
+                <>
+                  {itemParent.id_comment === 0 && (
+                    <li className="media">
+                      <a className="pull-left" href="#">
+                        <img
+                          className="media-object"
+                          src={getUserImg(itemParent.image_user)}
+                          alt="Waiting img"
+                        />
+                      </a>
+                      <div className="media-body">
+                        <ul className="sinlge-post-meta">
+                          <li>
+                            <i className="fa fa-user"></i>
+                            {itemParent.name_user}
+                          </li>
+                          <li>
+                            <i className="fa fa-clock-o"></i> 1:33 pm
+                          </li>
+                          <li>
+                            <i className="fa fa-calendar"></i> DEC 5, 2013
+                          </li>
+                        </ul>
+                        <p>{itemParent.comment}</p>
+                        <a
+                          className="btn btn-primary"
+                          href="#/"
+                          onClick={() => {
+                            handleReply(itemParent.id);
+                          }}
+                        >
+                          <i className="fa fa-reply"></i>
+                          Replay
+                        </a>
+                      </div>
+                    </li>
+                  )}
+
+                  {dataCommentParent
+                    .filter(
+                      (itemChild) => itemParent.id === itemChild.id_comment
+                    )
+                    .map((item) => (
+                      <>
+                        <li className="media second-media">
+                          <a
+                            className="pull-left"
+                            href="#/"
+                            style={{ height: "200px" }}
+                          >
+                            <img
+                              className="media-object"
+                              src={getUserImg(item.image_user)}
+                              alt=""
+                            />
+                          </a>
+                          <div className="media-body">
+                            <ul className="sinlge-post-meta">
+                              <li>
+                                <i className="fa fa-user"></i>
+                                {item.name_user}
+                              </li>
+                              <li>
+                                <i className="fa fa-clock-o"></i> 1:33 pm
+                              </li>
+                              <li>
+                                <i className="fa fa-calendar"></i> DEC 5, 2013
+                              </li>
+                            </ul>
+                            <p>{item.comment}</p>
+                            <a
+                              className="btn btn-primary"
+                              onClick={() => {
+                                handleReply(item.id);
+                              }}
+                              href="/"
+                            >
+                              <i className="fa fa-reply"></i>
+                              Replay
+                            </a>
+                          </div>
+                        </li>
+                      </>
+                    ))}
+                </>
+              );
+            })
+          ) : (
+            <></>
+          )}
         </ul>
       </div>
       <div className="replay-box">
@@ -391,9 +262,10 @@ function DetailComment({ idBlog }) {
 
             <div className="text-area">
               <div className="blank-arrow">
-                <label>Your Name</label>
+                <label>{convertDataLocal?.Auth.name}</label>
               </div>
               <span>*</span>
+              <Rating onClick={handleRating} />
               <textarea
                 name="message"
                 rows="11"
@@ -406,6 +278,7 @@ function DetailComment({ idBlog }) {
                 className="btn btn-primary"
                 onClick={() => handleSubmitComment(dataLocalStorage)}
                 href="#/"
+                ref={containerRef}
               >
                 Post Comment
               </a>

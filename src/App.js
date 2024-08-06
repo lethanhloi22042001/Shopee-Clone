@@ -12,8 +12,8 @@ function App(props) {
         <div className="container">
           <div className="row">
             <MenuLeft />
-            {/* <MenuRight/> */}
             {children}
+            
           </div>
         </div>
       </section>

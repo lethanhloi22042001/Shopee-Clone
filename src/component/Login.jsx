@@ -4,6 +4,7 @@ import { api } from "../services/api";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import LoginComponent from "./LoginComponent";
+import { blogImageUrl } from "../helper";
 function Login() {
   const navigate = useNavigate();
 
@@ -18,7 +19,7 @@ function Login() {
   });
   const [avatar, setAvatar] = useState("");
   const [file, setFile] = useState("");
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [imgBlob, setImgBlob] = useState("");
 
   const getValueInput = (e) => {
     const { value, name } = e.target;
@@ -42,7 +43,15 @@ function Login() {
       console.log("file", file);
     };
     reader.readAsDataURL(file[0]);
+    file.preview = URL.createObjectURL(file[0]);
+    setImgBlob(file);
   }
+
+  useEffect(() => {
+    return () => {
+      imgBlob && URL.revokeObjectURL(imgBlob.preview);
+    };
+  }, [imgBlob]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -77,17 +86,15 @@ function Login() {
         });
 
       setFile(null);
-      setSelectedImage(null);
     }
   };
 
-  useEffect(() => {}, [getData, avatar, file, selectedImage, fileInputRef]);
   return (
     <>
       <section id="form">
         <div className="container">
           <div className="row">
-            <LoginComponent />
+            <LoginComponent imgBlog={imgBlob} setImgBlob={setImgBlob} />
             <div className="col-sm-1">
               <h2 className="or">OR</h2>
             </div>
@@ -139,7 +146,6 @@ function Login() {
                       name="avatar"
                       onChange={(event) => {
                         handleUserInputFile(event);
-                        setSelectedImage(event.target.files[0]);
                       }}
                       id="uploadBtn"
                       ref={fileInputRef}
@@ -153,17 +159,18 @@ function Login() {
                     // minWidth={"360px"}
                     // minHeight={"200px"}
                   >
-                    {selectedImage && (
+                    {imgBlob ? (
                       <div>
                         <img
                           id="imgShowavatar"
                           alt="not found"
                           width={"250px"}
-                          src={URL.createObjectURL(selectedImage)}
+                          src={imgBlob.preview}
                         />
                         <button
                           onClick={() => {
-                            setSelectedImage(null);
+                            URL.revokeObjectURL(imgBlob);
+                            setImgBlob("");
                             if (fileInputRef.current.value) {
                               fileInputRef.current.value = "";
                             }
@@ -173,6 +180,8 @@ function Login() {
                           Remove
                         </button>
                       </div>
+                    ) : (
+                      <></>
                     )}
                   </div>
                   <input

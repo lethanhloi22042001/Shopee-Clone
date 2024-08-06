@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { api } from "../services/api";
 import { useNavigate } from "react-router-dom";
 
-function LoginComponent() {
+function LoginComponent({ imgBlob, setImgBlob }) {
   const navigate = useNavigate();
   const [dataLogin, setDataLogin] = useState({
     email: "",
